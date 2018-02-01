@@ -4,6 +4,22 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        nickNameLabel: {
+            default: null,
+            type: cc.Label
+        },
+        uidLabel: {
+            default: null,
+            type: cc.Label
+        },
+        headIcon: {
+            default: null,
+            type: cc.Sprite
+        },
+        houseCardLabel: {
+            default: null,
+            type: cc.Label
+        },
         joinRoom: {
             default: null,
             type: cc.Prefab
@@ -19,11 +35,18 @@ cc.Class({
     },
 
     onLoad () {
-        let socket = io('http://localhost:3000');
-        socket.on('welcome', function(data) {
-            console.log('data : ' + data);
+        let playerData = global.tianba.playerData;
+        this.nickNameLabel.string = playerData.nickName;
+        this.uidLabel.string = 'ID:' + playerData.uid;
+        this.houseCardLabel.string = '' + playerData.houseCardCount;
+        cc.loader.load(playerData.avatarUrl, (err, texture) => {
+            if (err) {
+                console.log('load err = ' + err);
+            } else {
+                // this.headIcon.spriteFrame.setTexture(texture);
+                this.headIcon.spriteFrame = new cc.SpriteFrame(texture);
+            }
         });
-        global.socket.init();
 
         let mask = this.tipsLabel.parent;
         let labelWidth = this.tipsLabel.width;
@@ -46,19 +69,6 @@ cc.Class({
     onBtClick (event, customData) {
         console.log('event: ' + event, 'data: ' + customData);
         switch (customData) {
-            case 'wechat':
-                global.socket.login(
-                    global.tianba.playerData.uniqueID,
-                    global.tianba.playerData.nickName,
-                    global.tianba.playerData.avatarUrl,
-                    function(err, data) {
-                        if (err) {
-                            console.log('login err ' + err);
-                        } else {
-                            console.log('login data: ' + JSON.stringify(data));
-                        }
-                    });
-                break;
             case 'joinRoom':
                 let node = cc.instantiate(this.joinRoom);
                 node.parent = this.node;

@@ -15,6 +15,10 @@ let PlayerData = function() {
     };
     this.loginSuccess = function(data) {
         console.log('login success data: ' + JSON.stringify(data));
+        this.uid = data.uid;
+        this.avatarUrl = data.avatarUrl;
+        this.nickName = data.nickName;
+        this.houseCardCount = data.houseCardCount;
     };
 };
 export default PlayerData;

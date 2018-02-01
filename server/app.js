@@ -3,6 +3,8 @@ const app = socket('3000');
 const config = require('./config.json')
 const mydb = require('./utility/db');
 const playerController = require('./game/player');
+const EventListener = require('./utility/eventListener').EventListener;
+
 mydb.connect(config.mysqlConfig);
 // mydb.checkPlayer('1000', function (err, cb) {
 //
@@ -18,9 +20,16 @@ mydb.connect(config.mysqlConfig);
 //     nick_name: '哈哈',
 //     avatar_url: 'haha.com'
 // });
+
+// let event = EventListener({});
+// event.on('test', function(p1) {
+//     console.log('p ' + p1);
+// });
+// event.fire('test', 1);
+
 app.on('connection', function(socket) {
     console.log('a user connected');
-    socket.emit('welcome', 'hello world!');
+    // socket.emit('welcome', 'hello world!');
     socket.on('send2server', function (msg, rawData, callbackIndex) {
         console.log('get msg from client: msg = ' + msg + ', data = ' + JSON.stringify(rawData));
         switch (msg) {
